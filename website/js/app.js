@@ -13,7 +13,6 @@ generateButton.addEventListener('click', getDataFromInput);
 /* Function called by event listener */
 
 apiURL = '';
-dataToPost = {};
 let dataTemp = '';
 
 async function getDataFromInput() {
@@ -28,13 +27,18 @@ async function getDataFromInput() {
     // console.log(apiURL);
     await weatherData(apiURL);
 
-    dataToPost.date = newDate;
-    dataToPost.temp = dataTemp;
-    dataToPost.feelings = feelingsEntry; 
+    console.log('LOGGING DATA');
+    await postData('/addData', {date: newDate, temp: dataTemp, feelings: feelingsEntry});
 
-    console.log(dataToPost);
+    await getData('/getData');
 
-    updateUI(newDate, dataTemp, feelingsEntry);
+    console.log(getResponse);
+    
+    try {
+        updateUI(getResponse.date, getResponse.temp, getResponse.feelings);
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 /* Function to GET Web API Data*/
@@ -46,14 +50,6 @@ const weatherData = async (url) => {
         dataTemp = data.main.temp;
     })
     .catch(error => console.log(err));
-};
-
-/* Change the UI and show the Most Recent Entry */
-
-const updateUI = (dateTxt, tempTxt, contentTxt) => {
-    const dateUI = document.getElementById('date').textContent = dateTxt;
-    const tempUI = document.getElementById('temp').textContent = tempTxt + ' °C';
-    const contentUI = document.getElementById('content').textContent = contentTxt;
 };
 
 /* Function to POST data */
@@ -77,6 +73,27 @@ const postData = async (url="", data = {}) => {
         console.log("Error: ", error);
     }
 };
+/*Function to GET data*/
 
-postData('/log', {test: 'test', name: 'John'});
-postData('/log', {age: 12, place: 'LA'});
+const getData = async (url="") => {
+    const response = await fetch(url, {
+        method: "GET",
+        credentials: "same-origin",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(response => {
+        let getResponse = response;
+        return getResponse;
+    })
+};
+
+/* Change the UI and show the Most Recent Entry */
+
+const updateUI = (dateTxt, tempTxt, contentTxt) => {
+    const dateUI = document.getElementById('date').textContent = dateTxt;
+    const tempUI = document.getElementById('temp').textContent = tempTxt + ' °C';
+    const contentUI = document.getElementById('content').textContent = contentTxt;
+};

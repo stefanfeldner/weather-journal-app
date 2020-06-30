@@ -26,10 +26,26 @@ const server = app.listen(port, () => {
 });
 
 // storing the weather data and using post so store it
-const projectData = [];
+let projectData = {};
 
-app.post('/log', (req, res) => {
-    console.log('EY'+req.body);
-    projectData.push(req.body);
-    console.log('Data:' + projectData)
+app.post('/addData', (req, res) => {
+    // saving the data in the global variable
+    projectData = {
+        date: req.body.date,
+        temp: req.body.temp,
+        feelings: req.body.feelings
+    };
+    console.log(projectData);
+
+    res.status(200).send({
+        success: true,
+        message: "Data saved successfully",
+        data: projectData
+    });
+});
+
+app.get('/getData', (req, res) => {
+    // sending projectData
+    res.status(200).send(projectData);
+    console.log('Send data');
 });
