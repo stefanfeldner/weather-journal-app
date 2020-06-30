@@ -29,16 +29,8 @@ async function getDataFromInput() {
 
     console.log('LOGGING DATA');
     await postData('/addData', {date: newDate, temp: dataTemp, feelings: feelingsEntry});
-
-    await getData('/getData');
-
-    console.log(getResponse);
     
-    try {
-        updateUI(getResponse.date, getResponse.temp, getResponse.feelings);
-    } catch (err) {
-        console.log(err);
-    }
+    await getData('/getData');
 }
 
 /* Function to GET Web API Data*/
@@ -50,6 +42,20 @@ const weatherData = async (url) => {
         dataTemp = data.main.temp;
     })
     .catch(error => console.log(err));
+};
+
+/*Function to GET data*/
+const getData = async (url="") => {
+    const response = await fetch(url, {
+        method: "GET"
+    })
+    .then(response => {
+        return response.json();
+    })
+    .then(data => {
+        console.log(data, '<-- DATA');
+        updateUI(data.date, data.temp, data.feelings);
+    }).catch(err => console.log(err));
 };
 
 /* Function to POST data */
@@ -72,22 +78,6 @@ const postData = async (url="", data = {}) => {
     } catch (error) {
         console.log("Error: ", error);
     }
-};
-/*Function to GET data*/
-
-const getData = async (url="") => {
-    const response = await fetch(url, {
-        method: "GET",
-        credentials: "same-origin",
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(response => {
-        let getResponse = response;
-        return getResponse;
-    })
 };
 
 /* Change the UI and show the Most Recent Entry */
