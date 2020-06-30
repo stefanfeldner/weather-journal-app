@@ -23,8 +23,7 @@ async function getDataFromInput() {
    
     // create the url to fetch from
     const apiURL = `https://api.openweathermap.org/data/2.5/weather?zip=${zipCode},${countryCode}&appid=${apiKey}&units=metric`;
-    console.log(zipCode, countryCode, feelingsEntry, newDate);
-    // console.log(apiURL);
+    //console.log(zipCode, countryCode, feelingsEntry, newDate);
     await weatherData(apiURL);
 
     console.log('LOGGING DATA');
@@ -38,7 +37,6 @@ const weatherData = async (url) => {
     await fetch(url)
     .then(res => res.json())
     .then(data => {
-        console.log(data);
         dataTemp = data.main.temp;
     })
     .catch(error => console.log(err));
@@ -53,7 +51,6 @@ const getData = async (url="") => {
         return response.json();
     })
     .then(data => {
-        console.log(data, '<-- DATA');
         updateUI(data.date, data.temp, data.feelings);
     }).catch(err => console.log(err));
 };
@@ -73,7 +70,6 @@ const postData = async (url="", data = {}) => {
     
     try {
         const newData = await response.json();
-        console.log(newData);
         return newData;
     } catch (error) {
         console.log("Error: ", error);
