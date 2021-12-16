@@ -7,5 +7,3 @@ Usage of Node / Express.
 #Author
 
 Stefan Feldner
-Contact me here: stefanfeldner@gmail.com
-Twitter: https://twitter.com/stefanfeldner
